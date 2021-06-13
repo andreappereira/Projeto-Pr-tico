@@ -1,2 +1,2 @@
-# Projeto-Pratico
+# Projeto Prático
  Projeto Final 1° Semestre
