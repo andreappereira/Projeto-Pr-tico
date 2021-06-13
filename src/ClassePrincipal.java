@@ -442,8 +442,6 @@ public class ClassePrincipal {
 
 		conexao = ConexaoBD.getInstance();
 
-		// Por exemplo, SELECT * FROM aula_bd.conta where agencia='1537-6';
-
 		String sql = ("select * from projeto_pratico.veiculo where cor like ?");
 		PreparedStatement stmt = conexao.prepareStatement(sql);
 		stmt.setString(1, corBuscada);
@@ -469,8 +467,6 @@ public class ClassePrincipal {
 		ArrayList<Veiculo> vetPortas = new ArrayList<Veiculo>();
 
 		conexao = ConexaoBD.getInstance();
-
-		// Por exemplo, SELECT * FROM aula_bd.conta where agencia='1537-6';
 
 		String sql = ("select * from projeto_pratico.veiculo where quantidadePortas like ?");
 		PreparedStatement stmt = conexao.prepareStatement(sql);
