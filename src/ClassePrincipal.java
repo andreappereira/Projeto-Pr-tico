@@ -55,6 +55,7 @@ public class ClassePrincipal {
 				// ler.close();
 
 				removerProprietarioPeloCpf(cpfDoProprietarioSeraRemovida);
+				
 				break;
 			}
 
@@ -77,6 +78,30 @@ public class ClassePrincipal {
 
 				break;
 			}
+			
+			case 5:{
+				Scanner ler = new Scanner(System.in);
+				String buscarEmail;
+				
+				System.out.println("Digite o email do proprietario a ser alterada: ");
+				buscarEmail = ler.next();
+				
+				Proprietario pSeraAlterado = buscarProprietarioPeloEmail(buscarEmail);
+				
+				if (pSeraAlterado == null) {
+					System.out.println("Proprietario não encontrado");
+				}
+				else {
+					mostrarProprietario(pSeraAlterado);
+					System.out.println("\nAtualize os dados do proprietario:\n");
+					
+					pSeraAlterado = lerDadosProprietario();
+					lerDadosP(pSeraAlterado, buscarEmail);
+				}
+				
+				break;
+			}
+			
 			case 6: { // cadastro de veiculo
 				Veiculo clida = lerDadosVeiculo();
 				inserirVeiculo(clida);
@@ -244,6 +269,29 @@ public class ClassePrincipal {
 		System.out.print("\nPeso..: " + proprietarioEncontrado.getPeso());
 		System.out.print("\nNumero CNH..:" + proprietarioEncontrado.getNumeroCnh());
 		System.out.println();
+
+	}
+	
+	// item 5 do menu
+	
+	public static void lerDadosP(Proprietario pSeraAlterado, String buscarEmail)
+			throws Exception {
+		conexao = ConexaoBD.getInstance();
+
+		String sql = "UPDATE proprietario SET cpf = ?, nome = ?,  email = ?, sexo = ?, peso = ?, numeroCnh = ? WHERE email like ?";
+
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+		
+		stmt.setLong(1, pSeraAlterado.getCpf());
+		stmt.setString(2, pSeraAlterado.getNome());
+		stmt.setString(3, pSeraAlterado.getEmail());
+		stmt.setString(4, pSeraAlterado.getSexo());
+		stmt.setDouble(5, pSeraAlterado.getPeso());
+		stmt.setLong(6, pSeraAlterado.getNumeroCnh());
+		stmt.setString(7, buscarEmail);
+
+		stmt.execute();
+		stmt.close();
 
 	}
 
