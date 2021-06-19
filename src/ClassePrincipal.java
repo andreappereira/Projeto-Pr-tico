@@ -13,7 +13,7 @@ public class ClassePrincipal {
 
 	public static void main(String[] args) throws Exception {
 
-		String menu = "\n1. Cadastro de proprietário" 
+		String menu = "\n1. Cadastro de proprietário"
 				+ "\n2. Remoção de proprietário"
 				+ "\n3. Busca de proprietário pelo e-mail"
 				+ "\n4. Relatório de todos os proprietários de veículos, considerando o nome do proprietário em ordem alfabética, a placa e a descrição do ou dos veículos os quais ele é proprietário"
@@ -24,8 +24,7 @@ public class ClassePrincipal {
 				+ "\n9. Relatório de todos os veículos de uma dada cor, com o nome do proprietário e a quantidade de portas"
 				+ "\n10. Busca veículos pela cor"
 				+ "\n11. Busca veículos pela quantidade de portas"
-				+ "\n12. Altera veículo"
-				+ "\n13. Sair";
+				+ "\n12. Altera veículo" + "\n13. Sair";
 
 		int opcao = 13;
 
@@ -55,7 +54,7 @@ public class ClassePrincipal {
 				// ler.close();
 
 				removerProprietarioPeloCpf(cpfDoProprietarioSeraRemovida);
-				
+
 				break;
 			}
 
@@ -78,30 +77,29 @@ public class ClassePrincipal {
 
 				break;
 			}
-			
-			case 5:{
+
+			case 5: {
 				Scanner ler = new Scanner(System.in);
 				String buscarEmail;
-				
+
 				System.out.println("Digite o email do proprietario a ser alterada: ");
 				buscarEmail = ler.next();
-				
+
 				Proprietario pSeraAlterado = buscarProprietarioPeloEmail(buscarEmail);
-				
+
 				if (pSeraAlterado == null) {
-					System.out.println("Proprietario não encontrado");
-				}
-				else {
+					System.out.print("Proprietario não encontrado");
+				} else {
 					mostrarProprietario(pSeraAlterado);
 					System.out.println("\nAtualize os dados do proprietario:\n");
-					
+
 					pSeraAlterado = lerDadosProprietario();
 					lerDadosP(pSeraAlterado, buscarEmail);
 				}
-				
+
 				break;
 			}
-			
+
 			case 6: { // cadastro de veiculo
 				Veiculo clida = lerDadosVeiculo();
 				inserirVeiculo(clida);
@@ -200,6 +198,31 @@ public class ClassePrincipal {
 				}
 
 				break;
+
+			}
+
+			case 12: {// Altera veículo
+				Scanner ler = new Scanner(System.in);
+				String buscarPlaca;
+
+				System.out.print("Digite a placa do veiculo que sera alterado: ");
+				buscarPlaca = ler.next();
+
+				Veiculo vSeraAlterado = buscarVeiculoPelaPlaca(buscarPlaca);
+
+				if (vSeraAlterado == null) {
+					System.out.print("Veiculo não encontrado");
+
+				} else {
+					mostrarVeiculo(vSeraAlterado);
+					System.out.print("Altualize os dados do veiculo: \n");
+
+					vSeraAlterado = lerDadosVeiculo();
+					lerDadosV(vSeraAlterado, buscarPlaca);
+
+				}
+
+				break;
 			}
 
 			case 13: {// sair
@@ -271,17 +294,16 @@ public class ClassePrincipal {
 		System.out.println();
 
 	}
-	
+
 	// item 5 do menu
-	
-	public static void lerDadosP(Proprietario pSeraAlterado, String buscarEmail)
-			throws Exception {
+
+	public static void lerDadosP(Proprietario pSeraAlterado, String buscarEmail) throws Exception {
 		conexao = ConexaoBD.getInstance();
 
 		String sql = "UPDATE proprietario SET cpf = ?, nome = ?,  email = ?, sexo = ?, peso = ?, numeroCnh = ? WHERE email like ?";
 
 		PreparedStatement stmt = conexao.prepareStatement(sql);
-		
+
 		stmt.setLong(1, pSeraAlterado.getCpf());
 		stmt.setString(2, pSeraAlterado.getNome());
 		stmt.setString(3, pSeraAlterado.getEmail());
@@ -354,6 +376,25 @@ public class ClassePrincipal {
 		System.out.print("\nDescrição..: " + veiculoEncontrado.getDescricao());
 		System.out.print("\nQuantidade de portas..: " + veiculoEncontrado.getQuantidadePortas());
 		System.out.println();
+
+	}
+	
+	// item 12 do menu
+	public static void lerDadosV(Veiculo vSeraAlterado, String buscarVeiculo) throws Exception {
+		conexao = ConexaoBD.getInstance();
+
+		String sql = "UPDATE veiculo SET cor = ?, placa = ?, descricao = ?, quantidadePortas = ? WHERE placa like ?";
+
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+
+		stmt.setString(1, vSeraAlterado.getCor());
+		stmt.setString(2, vSeraAlterado.getPlaca());
+		stmt.setString(3, vSeraAlterado.getDescricao());
+		stmt.setInt(4, vSeraAlterado.getQuantidadePortas());
+		stmt.setString(5, buscarVeiculo);
+
+		stmt.execute();
+		stmt.close();
 
 	}
 
@@ -459,8 +500,8 @@ public class ClassePrincipal {
 		stmt.close();
 
 	}
-	
-	//item 8 do menu
+
+	// item 8 do menu
 	public static Veiculo buscarVeiculoPelaPlaca(String buscarVeiculo) throws Exception {
 
 		conexao = ConexaoBD.getInstance();
@@ -482,7 +523,6 @@ public class ClassePrincipal {
 
 		return c;
 	}
-
 
 	// item 10 do menu
 	public static ArrayList<Veiculo> listaVeiculosCor(String corBuscada) throws Exception {
@@ -535,6 +575,5 @@ public class ClassePrincipal {
 
 		return vetPortas;
 	}
-
 
 }
