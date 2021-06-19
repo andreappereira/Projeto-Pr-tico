@@ -1,4 +1,4 @@
-// Aluno: AndrÃ© Aparecido Pereira da ConceiÃ§Ã£o
+// Aluno: André Aparecido Pereira da Conceição
 // RA: 202111601
 
 import java.sql.*;

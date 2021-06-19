@@ -1,4 +1,4 @@
-// Aluno: Andr√© Aparecido Pereira da Concei√ß√£o
+// Aluno: AndrÈ Aparecido Pereira da ConceiÁ„o
 // RA: 202111601
 
 import java.sql.*;
@@ -13,18 +13,19 @@ public class ClassePrincipal {
 
 	public static void main(String[] args) throws Exception {
 
-		String menu = "\n1. Cadastro de propriet√°rio"
-				+ "\n2. Remo√ß√£o de propriet√°rio"
-				+ "\n3. Busca de propriet√°rio pelo e-mail"
-				+ "\n4. Relat√≥rio de todos os propriet√°rios de ve√≠culos, considerando o nome do propriet√°rio em ordem alfab√©tica, a placa e a descri√ß√£o do ou dos ve√≠culos os quais ele √© propriet√°rio"
-				+ "\n5. Altera propriet√°rio"
-				+ "\n6. Cadastro de ve√≠culo"
-				+ "\n7. Remo√ß√£o de ve√≠culo"
-				+ "\n8. Busca ve√≠culo pela placa"
-				+ "\n9. Relat√≥rio de todos os ve√≠culos de uma dada cor, com o nome do propriet√°rio e a quantidade de portas"
-				+ "\n10. Busca ve√≠culos pela cor"
-				+ "\n11. Busca ve√≠culos pela quantidade de portas"
-				+ "\n12. Altera ve√≠culo" + "\n13. Sair";
+		String menu = "\n1. Cadastro de propriet·rio"
+				+ "\n2. RemoÁ„o de propriet·rio"
+				+ "\n3. Busca de propriet·rio pelo e-mail"
+				+ "\n4. RelatÛrio de todos os propriet·rios de veÌculos, considerando o nome do propriet·rio em ordem alfabÈtica, a placa e a descriÁ„o do ou dos veÌculos os quais ele È propriet·rio"
+				+ "\n5. Altera propriet·rio"
+				+ "\n6. Cadastro de veÌculo"
+				+ "\n7. RemoÁ„o de veÌculo"
+				+ "\n8. Busca veÌculo pela placa"
+				+ "\n9. RelatÛrio de todos os veÌculos de uma dada cor, com o nome do propriet·rio e a quantidade de portas"
+				+ "\n10. Busca veÌculos pela cor"
+				+ "\n11. Busca veÌculos pela quantidade de portas"
+				+ "\n12. Altera veÌculo"
+				+ "\n13. Sair";
 
 		int opcao = 13;
 
@@ -33,12 +34,12 @@ public class ClassePrincipal {
 		do {
 			System.out.println(menu);
 
-			System.out.print("Digite uma op√ß√£o: ");
+			System.out.print("Digite uma opÁ„o: ");
 			// opcao = lerOpcao.nextInt();
 			opcao = Integer.parseInt(lerOpcao.next()); // conversor para inteiro primitivo
 
 			switch (opcao) {
-			case 1: { // Cadastro de propriet√°rio
+			case 1: { // Cadastro de propriet·rio
 				Proprietario plida = lerDadosProprietario();
 				inserirProprietario(plida);
 				System.out.println("Proprietario cadastrado!");
@@ -46,19 +47,19 @@ public class ClassePrincipal {
 				break;
 			}
 
-			case 2: { // Remo√ß√£o de propriet√°rio pelo cpf
+			case 2: { // RemoÁ„o de propriet·rio pelo cpf
 				Scanner ler = new Scanner(System.in);
 				long cpfDoProprietarioSeraRemovida;
 				System.out.print("Digite o cpf do proprietario que sera removido: ");
 				cpfDoProprietarioSeraRemovida = ler.nextLong();
-				// ler.close();
+				ler.close();
 
 				removerProprietarioPeloCpf(cpfDoProprietarioSeraRemovida);
 
 				break;
 			}
 
-			case 3: {// Busca de propriet√°rio pelo e-mail
+			case 3: {// Busca de propriet·rio pelo e-mail
 				Scanner ler = new Scanner(System.in);
 				String buscarEmail;
 
@@ -71,10 +72,11 @@ public class ClassePrincipal {
 					mostrarProprietario(proprietarioEncontrado);
 				} else {
 					System.out.println();
-					System.out.print("N√£o ha propriet√°rio cadastrado com esse email");
+					System.out.print("N„o ha propriet·rio cadastrado com esse email");
 					System.out.println();
 				}
-
+				
+				ler.close();
 				break;
 			}
 
@@ -88,7 +90,7 @@ public class ClassePrincipal {
 				Proprietario pSeraAlterado = buscarProprietarioPeloEmail(buscarEmail);
 
 				if (pSeraAlterado == null) {
-					System.out.print("Proprietario n√£o encontrado");
+					System.out.print("Proprietario n„o encontrado");
 				} else {
 					mostrarProprietario(pSeraAlterado);
 					System.out.println("\nAtualize os dados do proprietario:\n");
@@ -96,7 +98,7 @@ public class ClassePrincipal {
 					pSeraAlterado = lerDadosProprietario();
 					lerDadosP(pSeraAlterado, buscarEmail);
 				}
-
+				ler.close();
 				break;
 			}
 
@@ -113,14 +115,15 @@ public class ClassePrincipal {
 				String placaDoVeiculoQueSeraRemovido;
 				System.out.print("Digite a placa do veiculo que sera removido: ");
 				placaDoVeiculoQueSeraRemovido = lerVeiculo.next();
-				// lerveiculo.close();
+			
+				lerVeiculo.close();
 
 				removerVeiculoPelaPlaca(placaDoVeiculoQueSeraRemovido);
 				break;
 
 			}
 
-			case 8: { // Busca ve√≠culo pela placa
+			case 8: { // Busca veÌculo pela placa
 				Scanner lerPlaca = new Scanner(System.in);
 				String buscarVeiculo;
 
@@ -134,15 +137,15 @@ public class ClassePrincipal {
 
 				} else {
 					System.out.println();
-					System.out.print("N√£o ha veiculo cadastrado com essa placa");
+					System.out.print("N„o ha veiculo cadastrado com essa placa");
 					System.out.println();
 				}
-
+				lerPlaca.close();
 				break;
 
 			}
 
-			case 10: { // Busca ve√≠culos pela cor
+			case 10: { // Busca veÌculos pela cor
 				Scanner lerCor = new Scanner(System.in);
 				String corBuscada;
 
@@ -164,14 +167,14 @@ public class ClassePrincipal {
 
 				else {
 					System.out.println();
-					System.out.print("N√£o possui veiculos cadastrados com essa cor");
+					System.out.print("N„o possui veiculos cadastrados com essa cor");
 					System.out.println();
 				}
-
+				lerCor.close();
 				break;
 			}
 
-			case 11: { // Busca ve√≠culos pela quantidade de portas
+			case 11: { // Busca veÌculos pela quantidade de portas
 				Scanner lerPortas = new Scanner(System.in);
 				String portasBuscada;
 
@@ -193,15 +196,15 @@ public class ClassePrincipal {
 
 				else {
 					System.out.println();
-					System.out.print("N√£o possui veiculos cadastrados com essa essa quantidade de portas");
+					System.out.print("N„o possui veiculos cadastrados com essa essa quantidade de portas");
 					System.out.println();
 				}
-
+				lerPortas.close();
 				break;
 
 			}
 
-			case 12: {// Altera ve√≠culo
+			case 12: {// Altera veÌculo
 				Scanner ler = new Scanner(System.in);
 				String buscarPlaca;
 
@@ -211,7 +214,7 @@ public class ClassePrincipal {
 				Veiculo vSeraAlterado = buscarVeiculoPelaPlaca(buscarPlaca);
 
 				if (vSeraAlterado == null) {
-					System.out.print("Veiculo n√£o encontrado");
+					System.out.print("Veiculo n„o encontrado");
 
 				} else {
 					mostrarVeiculo(vSeraAlterado);
@@ -221,7 +224,7 @@ public class ClassePrincipal {
 					lerDadosV(vSeraAlterado, buscarPlaca);
 
 				}
-
+				ler.close();
 				break;
 			}
 
@@ -230,7 +233,7 @@ public class ClassePrincipal {
 				break;
 			}
 			default: {
-				System.out.println("\nOp√ß√£o invalida!!!!");
+				System.out.println("\nOpÁ„o invalida!!!!");
 				break;
 			}
 
@@ -243,7 +246,7 @@ public class ClassePrincipal {
 	}
 
 	// *****************************************
-	// METODOS PARA ENTRADA E SA√çDA PELO CONSOLE
+	// METODOS PARA ENTRADA E SAÕDA PELO CONSOLE
 	// *****************************************
 
 	// item 01 do menu
@@ -266,18 +269,18 @@ public class ClassePrincipal {
 		System.out.print("\nEmail: ");
 		email = ler.next();
 
-		System.out.print("\nSexo: ");
+		System.out.println("\nSexo: ");
 		sexo = ler.next();
 
-		System.out.print("\nPeso: ");
+		System.out.println("\nPeso: ");
 		peso = ler.nextDouble();
 
-		System.out.print("\nN√∫mero da CNH: ");
+		System.out.println("\nN˙mero da CNH: ");
 		numeroCnh = ler.nextLong();
 
 		Proprietario p = new Proprietario(cpf, nome, email, sexo, peso, numeroCnh);
 
-		// ler.close();
+		ler.close();
 
 		return p;
 	}
@@ -333,7 +336,7 @@ public class ClassePrincipal {
 		System.out.print("\nPlaca: ");
 		placa = ler.next();
 
-		System.out.print("\nDescri√ß√£o do veiculo: ");
+		System.out.print("\nDescriÁ„o do veiculo: ");
 		descricao = ler.next();
 
 		System.out.print("\nQuantidade de portas: ");
@@ -341,7 +344,7 @@ public class ClassePrincipal {
 
 		Veiculo c = new Veiculo(cor, placa, descricao, quantidadePortas, null);
 
-		// ler.close();
+		ler.close();
 
 		return c;
 	}
@@ -351,7 +354,7 @@ public class ClassePrincipal {
 		System.out.println();
 		System.out.print("\nCor..: " + veiculoEncontrado.getCor());
 		System.out.print("\nPlaca..: " + veiculoEncontrado.getPlaca());
-		System.out.print("\nDescri√ß√£o..: " + veiculoEncontrado.getDescricao());
+		System.out.print("\nDescriÁ„o..: " + veiculoEncontrado.getDescricao());
 		System.out.print("\nQuantidade de portas..: " + veiculoEncontrado.getQuantidadePortas());
 		System.out.println();
 
@@ -362,7 +365,7 @@ public class ClassePrincipal {
 		System.out.println();
 		System.out.print("\nCor..: " + veiculoEncontrado.getCor());
 		System.out.print("\nPlaca..: " + veiculoEncontrado.getPlaca());
-		System.out.print("\nDescri√ß√£o..: " + veiculoEncontrado.getDescricao());
+		System.out.print("\nDescriÁ„o..: " + veiculoEncontrado.getDescricao());
 		System.out.print("\nQuantidade de portas..: " + veiculoEncontrado.getQuantidadePortas());
 		System.out.println();
 
@@ -373,7 +376,7 @@ public class ClassePrincipal {
 		System.out.println();
 		System.out.print("\nCor..: " + veiculoEncontrado.getCor());
 		System.out.print("\nPlaca..: " + veiculoEncontrado.getPlaca());
-		System.out.print("\nDescri√ß√£o..: " + veiculoEncontrado.getDescricao());
+		System.out.print("\nDescriÁ„o..: " + veiculoEncontrado.getDescricao());
 		System.out.print("\nQuantidade de portas..: " + veiculoEncontrado.getQuantidadePortas());
 		System.out.println();
 
@@ -399,7 +402,7 @@ public class ClassePrincipal {
 	}
 
 	// *******************************************************************
-	// METODOS PARA MANIPULA√á√ÉO(PERSIST√äNCIA DOS DADOS) NO BANCO DE DADOS
+	// METODOS PARA MANIPULA«√O(PERSIST NCIA DOS DADOS) NO BANCO DE DADOS
 	// *******************************************************************
 
 	// item 01 do menu
@@ -421,7 +424,7 @@ public class ClassePrincipal {
 
 		stmt.close();
 
-		// n√£o feche a conex√£o com o banco para que possa continuar cadastrando
+		// n„o feche a conex„o com o banco para que possa continuar cadastrando
 		// conexao.close();
 
 	}
