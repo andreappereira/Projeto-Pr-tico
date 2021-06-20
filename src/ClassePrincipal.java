@@ -52,7 +52,7 @@ public class ClassePrincipal {
 				long cpfDoProprietarioSeraRemovida;
 				System.out.print("Digite o cpf do proprietario que sera removido: ");
 				cpfDoProprietarioSeraRemovida = ler.nextLong();
-				ler.close();
+				//ler.close();
 
 				removerProprietarioPeloCpf(cpfDoProprietarioSeraRemovida);
 
@@ -76,7 +76,7 @@ public class ClassePrincipal {
 					System.out.println();
 				}
 				
-				ler.close();
+				//ler.close();
 				break;
 			}
 
@@ -98,7 +98,7 @@ public class ClassePrincipal {
 					pSeraAlterado = lerDadosProprietario();
 					lerDadosP(pSeraAlterado, buscarEmail);
 				}
-				ler.close();
+				//ler.close();
 				break;
 			}
 
@@ -116,7 +116,7 @@ public class ClassePrincipal {
 				System.out.print("Digite a placa do veiculo que sera removido: ");
 				placaDoVeiculoQueSeraRemovido = lerVeiculo.next();
 			
-				lerVeiculo.close();
+				//lerVeiculo.close();
 
 				removerVeiculoPelaPlaca(placaDoVeiculoQueSeraRemovido);
 				break;
@@ -140,7 +140,7 @@ public class ClassePrincipal {
 					System.out.print("Não ha veiculo cadastrado com essa placa");
 					System.out.println();
 				}
-				lerPlaca.close();
+				//lerPlaca.close();
 				break;
 
 			}
@@ -170,7 +170,7 @@ public class ClassePrincipal {
 					System.out.print("Não possui veiculos cadastrados com essa cor");
 					System.out.println();
 				}
-				lerCor.close();
+				//lerCor.close();
 				break;
 			}
 
@@ -199,7 +199,7 @@ public class ClassePrincipal {
 					System.out.print("Não possui veiculos cadastrados com essa essa quantidade de portas");
 					System.out.println();
 				}
-				lerPortas.close();
+				//lerPortas.close();
 				break;
 
 			}
@@ -224,7 +224,7 @@ public class ClassePrincipal {
 					lerDadosV(vSeraAlterado, buscarPlaca);
 
 				}
-				ler.close();
+				//ler.close();
 				break;
 			}
 
@@ -269,18 +269,18 @@ public class ClassePrincipal {
 		System.out.print("\nEmail: ");
 		email = ler.next();
 
-		System.out.println("\nSexo: ");
+		System.out.print("\nSexo: ");
 		sexo = ler.next();
 
-		System.out.println("\nPeso: ");
+		System.out.print("\nPeso: ");
 		peso = ler.nextDouble();
 
-		System.out.println("\nNúmero da CNH: ");
+		System.out.print("\nNúmero da CNH: ");
 		numeroCnh = ler.nextLong();
 
 		Proprietario p = new Proprietario(cpf, nome, email, sexo, peso, numeroCnh);
 
-		ler.close();
+		//ler.close();
 
 		return p;
 	}
@@ -298,27 +298,6 @@ public class ClassePrincipal {
 
 	}
 
-	// item 5 do menu
-
-	public static void lerDadosP(Proprietario pSeraAlterado, String buscarEmail) throws Exception {
-		conexao = ConexaoBD.getInstance();
-
-		String sql = "UPDATE proprietario SET cpf = ?, nome = ?,  email = ?, sexo = ?, peso = ?, numeroCnh = ? WHERE email like ?";
-
-		PreparedStatement stmt = conexao.prepareStatement(sql);
-
-		stmt.setLong(1, pSeraAlterado.getCpf());
-		stmt.setString(2, pSeraAlterado.getNome());
-		stmt.setString(3, pSeraAlterado.getEmail());
-		stmt.setString(4, pSeraAlterado.getSexo());
-		stmt.setDouble(5, pSeraAlterado.getPeso());
-		stmt.setLong(6, pSeraAlterado.getNumeroCnh());
-		stmt.setString(7, buscarEmail);
-
-		stmt.execute();
-		stmt.close();
-
-	}
 
 	// item 6 do menu
 	public static Veiculo lerDadosVeiculo() {
@@ -344,7 +323,7 @@ public class ClassePrincipal {
 
 		Veiculo c = new Veiculo(cor, placa, descricao, quantidadePortas, null);
 
-		ler.close();
+		//ler.close();
 
 		return c;
 	}
@@ -382,24 +361,7 @@ public class ClassePrincipal {
 
 	}
 	
-	// item 12 do menu
-	public static void lerDadosV(Veiculo vSeraAlterado, String buscarVeiculo) throws Exception {
-		conexao = ConexaoBD.getInstance();
 
-		String sql = "UPDATE veiculo SET cor = ?, placa = ?, descricao = ?, quantidadePortas = ? WHERE placa like ?";
-
-		PreparedStatement stmt = conexao.prepareStatement(sql);
-
-		stmt.setString(1, vSeraAlterado.getCor());
-		stmt.setString(2, vSeraAlterado.getPlaca());
-		stmt.setString(3, vSeraAlterado.getDescricao());
-		stmt.setInt(4, vSeraAlterado.getQuantidadePortas());
-		stmt.setString(5, buscarVeiculo);
-
-		stmt.execute();
-		stmt.close();
-
-	}
 
 	// *******************************************************************
 	// METODOS PARA MANIPULAÇÃO(PERSISTÊNCIA DOS DADOS) NO BANCO DE DADOS
@@ -467,6 +429,28 @@ public class ClassePrincipal {
 		stmt.close();
 
 		return p;
+	}
+	
+	// item 5 do menu
+
+	public static void lerDadosP(Proprietario pSeraAlterado, String buscarEmail) throws Exception {
+		conexao = ConexaoBD.getInstance();
+
+		String sql = "UPDATE proprietario SET cpf = ?, nome = ?,  email = ?, sexo = ?, peso = ?, numeroCnh = ? WHERE email like ?";
+
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+
+		stmt.setLong(1, pSeraAlterado.getCpf());
+		stmt.setString(2, pSeraAlterado.getNome());
+		stmt.setString(3, pSeraAlterado.getEmail());
+		stmt.setString(4, pSeraAlterado.getSexo());
+		stmt.setDouble(5, pSeraAlterado.getPeso());
+		stmt.setLong(6, pSeraAlterado.getNumeroCnh());
+		stmt.setString(7, buscarEmail);
+
+		stmt.execute();
+		stmt.close();
+
 	}
 
 	// item 6 do menu
@@ -544,7 +528,7 @@ public class ClassePrincipal {
 			c = new Veiculo(resultado.getString("cor"), resultado.getString("placa"), resultado.getString("descricao"),
 					resultado.getInt("quantidadePortas"), null);
 
-			vetCor.add(c); // adiciona a conta da agencia buscada
+			vetCor.add(c);
 		}
 
 		resultado.close();
@@ -570,13 +554,32 @@ public class ClassePrincipal {
 			c = new Veiculo(resultado.getString("cor"), resultado.getString("placa"), resultado.getString("descricao"),
 					resultado.getInt("quantidadePortas"), null);
 
-			vetPortas.add(c); // adiciona a conta da agencia buscada
+			vetPortas.add(c); 
 		}
 
 		resultado.close();
 		stmt.close();
 
 		return vetPortas;
+	}
+	
+	// item 12 do menu
+	public static void lerDadosV(Veiculo vSeraAlterado, String buscarVeiculo) throws Exception {
+		conexao = ConexaoBD.getInstance();
+
+		String sql = "UPDATE veiculo SET cor = ?, placa = ?, descricao = ?, quantidadePortas = ? WHERE placa like ?";
+
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+
+		stmt.setString(1, vSeraAlterado.getCor());
+		stmt.setString(2, vSeraAlterado.getPlaca());
+		stmt.setString(3, vSeraAlterado.getDescricao());
+		stmt.setInt(4, vSeraAlterado.getQuantidadePortas());
+		stmt.setString(5, buscarVeiculo);
+
+		stmt.execute();
+		stmt.close();
+
 	}
 
 }
