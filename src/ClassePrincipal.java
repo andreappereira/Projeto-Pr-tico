@@ -79,6 +79,29 @@ public class ClassePrincipal {
 				//ler.close();
 				break;
 			}
+			
+			case 4: {//Relatório de todos os proprietários de veículos
+			    ArrayList<Proprietario> vetorProprietarios = listaProprietario();
+			    
+			    //impressao no console
+			    for (int i=0; i<vetorProprietarios.size(); i++) {
+			    	Proprietario p = vetorProprietarios.get(i);
+			    	mostrarProprietario(p);
+			    }
+			    
+			    vetorProprietarios = quickSort(vetorProprietarios); //ordena a lista de pessoas
+			    
+			    //impressao ordenada no console
+			    System.out.println("\n\n ***************** RELATÓRIO DE PESSOAS ordenadas pelo nome ***************\n\n");
+			    for (int i=0; i<vetorProprietarios.size(); i++) {
+			    	Proprietario p = vetorProprietarios.get(i);
+			    	mostrarProprietario(p);
+			    }
+				
+				relatorioFormatado(vetorProprietarios);
+				
+  			    break;					
+			}
 
 			case 5: {
 				Scanner ler = new Scanner(System.in);
@@ -298,6 +321,27 @@ public class ClassePrincipal {
 
 	}
 
+	//item 4 do menu
+	
+	public static void relatorioFormatado(ArrayList<Proprietario> vetProprietarios) {
+		
+		String linhaM = "---------------------------------------------------------------------------------";
+		String linhaN = "=================================================================================";
+		
+		System.out.print("\n"+linhaM);
+		System.out.print("\n|Código\t| Nome\t\t\t| Email\t\t\t\t| Peso (KG)\t|");	
+		System.out.print("\n"+linhaM);
+		
+		for (int i=0; i<vetProprietarios.size(); i++) {
+			Proprietario p = vetProprietarios.get(i);
+			System.out.printf("\n| %d\t| %20s\t| %25s\t| %.2f\t\t| ", p.getCodPessoa(),p.getNome(), p.getEmail(), p.getPeso());	
+		}
+		
+		
+		System.out.print("\n"+linhaM);	
+		
+	}
+	
 
 	// item 6 do menu
 	public static Veiculo lerDadosVeiculo() {
