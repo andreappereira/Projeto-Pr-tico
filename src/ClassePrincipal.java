@@ -80,27 +80,28 @@ public class ClassePrincipal {
 				break;
 			}
 			
-			case 4: {//Relatório de todos os proprietários de veículos
-			    ArrayList<Proprietario> vetorProprietarios = listaProprietario();
-			    
-			    //impressao no console
-			    for (int i=0; i<vetorProprietarios.size(); i++) {
-			    	Proprietario p = vetorProprietarios.get(i);
-			    	mostrarProprietario(p);
-			    }
-			    
-			    vetorProprietarios = quickSort(vetorProprietarios); //ordena a lista de pessoas
-			    
-			    //impressao ordenada no console
-			    System.out.println("\n\n ***************** RELATÓRIO DE PESSOAS ordenadas pelo nome ***************\n\n");
-			    for (int i=0; i<vetorProprietarios.size(); i++) {
-			    	Proprietario p = vetorProprietarios.get(i);
-			    	mostrarProprietario(p);
-			    }
-				
+			case 4: {// Relatório de todos os proprietários de veículos
+				ArrayList<Proprietario> vetorProprietarios = listaProprietario();
+
+				// impressao no console
+				for (int i = 0; i < vetorProprietarios.size(); i++) {
+					Proprietario p = vetorProprietarios.get(i);
+					mostrarProprietario(p);
+				}
+
+				vetorProprietarios = quickSort(vetorProprietarios); // ordena a lista de pessoas
+
+				// impressao ordenada no console
+				System.out
+						.println("\n\n ***************** RELATÓRIO DE PESSOAS ordenadas pelo nome ***************\n\n");
+				for (int i = 0; i < vetorProprietarios.size(); i++) {
+					Proprietario p = vetorProprietarios.get(i);
+					mostrarProprietario(p);
+				}
+
 				relatorioFormatado(vetorProprietarios);
-				
-  			    break;					
+
+				break;
 			}
 
 			case 5: {
@@ -321,25 +322,24 @@ public class ClassePrincipal {
 
 	}
 
-	//item 4 do menu
-	
+	// item 4 do menu
+
 	public static void relatorioFormatado(ArrayList<Proprietario> vetProprietarios) {
-		
+
 		String linhaM = "---------------------------------------------------------------------------------";
 		String linhaN = "=================================================================================";
-		
-		System.out.print("\n"+linhaM);
-		System.out.print("\n|Código\t| Nome\t\t\t| Email\t\t\t\t| Peso (KG)\t|");	
-		System.out.print("\n"+linhaM);
-		
-		for (int i=0; i<vetProprietarios.size(); i++) {
+
+		System.out.print("\n" + linhaM);
+		System.out.print("\n|Nome\t| CPF\t\t\t| Email\t\t\t\t| Peso (KG)\t|");
+		System.out.print("\n" + linhaM);
+
+		for (int i = 0; i < vetProprietarios.size(); i++) {
 			Proprietario p = vetProprietarios.get(i);
-			System.out.printf("\n| %d\t| %20s\t| %25s\t| %.2f\t\t| ", p.getCodPessoa(),p.getNome(), p.getEmail(), p.getPeso());	
+			System.out.printf("\n| %d\t| %20s\t| %25s\t| %.2f\t\t| ", p.getNome(), p.getCpf());
 		}
-		
-		
-		System.out.print("\n"+linhaM);	
-		
+
+		System.out.print("\n" + linhaM);
+
 	}
 	
 
@@ -473,6 +473,60 @@ public class ClassePrincipal {
 		stmt.close();
 
 		return p;
+	}
+	
+	// item 4 do menu
+	
+	public static ArrayList<Proprietario> listaPessoa() throws Exception {
+		ArrayList<Proprietario> vetorProprietarios = new ArrayList<Proprietario>();
+
+		conexao = ConexaoBD.getInstance();
+		String sql = "select * from proprietario";
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+		ResultSet resultado = stmt.executeQuery();
+
+		Proprietario p = null;
+
+		while (resultado.next()) {
+			p = new Proprietario(resultado.getString("nome"), resultado.getLong("cpf"));
+
+			vetorProprietarios.add(p);
+		}
+
+		resultado.close();
+		stmt.close();
+
+		return vetorProprietarios;
+	}
+
+	/******************* método de ordenação rápida ***********************/
+	public static ArrayList<Proprietario> quickSort(ArrayList<Proprietario> list) {
+
+		if (list.size() <= 1)
+			return list; // já está ordenada
+
+		ArrayList<Proprietario> listOrdenada = new ArrayList<Proprietario>();
+		ArrayList<Proprietario> listMenores = new ArrayList<Proprietario>();
+		ArrayList<Proprietario> listMaiores = new ArrayList<Proprietario>();
+
+		Proprietario pivo = list.get(list.size() - 1); // usar a última Pessoa como pivô
+
+		// separação (partição) das listas
+		for (int i = 0; i < list.size() - 1; i++) {
+			if (list.get(i).getNome().compareTo(pivo.getNome()) < 0) // COMPARACAO ENTRE STRINGS
+				listMenores.add(list.get(i));
+			else
+				listMaiores.add(list.get(i));
+		}
+
+		listMenores = quickSort(listMenores); // recursão à esquerda do pivô
+		listMaiores = quickSort(listMaiores); // recursão à direita do pivô
+
+		listMenores.add(pivo);
+		listMenores.addAll(listMaiores);
+		listOrdenada = listMenores;
+
+		return listOrdenada;
 	}
 	
 	// item 5 do menu
