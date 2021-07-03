@@ -6,12 +6,14 @@ public class Veiculo {
 	String cor, placa, descricao;
 	int quantidadePortas;
 	Proprietario pess;
+	long cpf;
 
-	public Veiculo(String cor, String placa, String descricao, int quantidadePortas, Proprietario pess) {
+	public Veiculo(String cor, String placa, String descricao, int quantidadePortas, Long cpf) {
 		this.cor = cor;
 		this.placa = placa;
 		this.descricao = descricao;
 		this.quantidadePortas = quantidadePortas;
+		this.cpf = cpf;
 
 	}
 
@@ -47,12 +49,15 @@ public class Veiculo {
 		this.quantidadePortas = quantidadePortas;
 	}
 
-	public Proprietario getPess() {
-		return pess;
+
+	public long getCpf() {
+		return cpf;
 	}
 
-	public void setPess(Proprietario pess) {
-		this.pess = pess;
+	public void setCpf(long cpf) {
+		this.cpf = cpf;
 	}
+
+
 
 }

@@ -84,10 +84,6 @@ public class ClassePrincipal {
 				ArrayList<Proprietario> vetorProprietarios = listaProprietario();
 
 				// impressao no console
-				for (int i = 0; i < vetorProprietarios.size(); i++) {
-					Proprietario p = vetorProprietarios.get(i);
-					mostrarProprietario(p);
-				}
 
 				vetorProprietarios = quickSort(vetorProprietarios); // ordena a lista de pessoas
 
@@ -96,10 +92,10 @@ public class ClassePrincipal {
 						.println("\n\n ***************** RELATÓRIO DE PESSOAS ordenadas pelo nome ***************\n\n");
 				for (int i = 0; i < vetorProprietarios.size(); i++) {
 					Proprietario p = vetorProprietarios.get(i);
+					Veiculo v = buscarVeiculoPeloCpf(p.cpf);
 					mostrarProprietario(p);
+					mostrarVeiculo(v);
 				}
-
-				relatorioFormatado(vetorProprietarios);
 
 				break;
 			}
@@ -312,8 +308,8 @@ public class ClassePrincipal {
 	// item 3 do menu
 	public static void mostrarProprietario(Proprietario proprietarioEncontrado) {
 		System.out.println();
-		System.out.print("\nCPF...: " + proprietarioEncontrado.getCpf());
 		System.out.print("\nNome..: " + proprietarioEncontrado.getNome());
+		System.out.print("\nCPF...: " + proprietarioEncontrado.getCpf());
 		System.out.print("\nEmail.: " + proprietarioEncontrado.getEmail());
 		System.out.print("\nSexo..: " + proprietarioEncontrado.getSexo());
 		System.out.print("\nPeso..: " + proprietarioEncontrado.getPeso());
@@ -323,28 +319,36 @@ public class ClassePrincipal {
 	}
 
 	// item 4 do menu
-
-	public static void relatorioFormatado(ArrayList<Proprietario> vetProprietarios) {
-
-		String linhaM = "---------------------------------------------------------------------------------";
-		String linhaN = "=================================================================================";
-
-		System.out.print("\n" + linhaM);
-		System.out.print("\n|Nome\t| CPF\t\t\t| Email\t\t\t\t| Peso (KG)\t|");
-		System.out.print("\n" + linhaM);
-
-		for (int i = 0; i < vetProprietarios.size(); i++) {
-			Proprietario p = vetProprietarios.get(i);
-			System.out.printf("\n| %d\t| %20s\t| %25s\t| %.2f\t\t| ", p.getNome(), p.getCpf());
-		}
-
-		System.out.print("\n" + linhaM);
-
-	}
 	
+	public static Veiculo buscarVeiculoPeloCpf(long cpf) throws Exception {
+
+		conexao = ConexaoBD.getInstance();
+
+		String sql = "select * from veiculo where cpf like ?";
+
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+		stmt.setLong(1, cpf);
+		ResultSet resultado = stmt.executeQuery();
+
+		Veiculo v = null;
+		if (resultado.next()) {
+			v = new Veiculo( 
+					resultado.getString("Veiculo.cor"),
+					resultado.getString("Veiculo.placa"), 
+					resultado.getString("Veiculo.descricao"), 
+					resultado.getInt("Veiculo.quantidadePortas"), 
+					resultado.getLong("Veiculo.cpf")
+			);
+
+		}
+		resultado.close();
+		stmt.close();
+
+		return v;
+	}
 
 	// item 6 do menu
-	public static Veiculo lerDadosVeiculo() {
+	public static Veiculo lerDadosVeiculo() throws Exception{
 
 		Scanner ler = new Scanner(System.in);
 
@@ -365,12 +369,27 @@ public class ClassePrincipal {
 		System.out.print("\nQuantidade de portas: ");
 		quantidadePortas = ler.nextInt();
 
-		Veiculo c = new Veiculo(cor, placa, descricao, quantidadePortas, null);
+		Long cpfBuscado;
+		System.out.print("\nDigite o CPF do proprietario do veiculo a ser cadastrado: ");
+		cpfBuscado = ler.nextLong();
+		
+		Proprietario pEncontrada = buscarProprietarioPeloCpf(cpfBuscado);
+		
+		if (pEncontrada != null) {
+			Veiculo v = new Veiculo(cor, placa, descricao, quantidadePortas, pEncontrada.cpf);
+			v.setCpf(pEncontrada.cpf);
+			return v;
+		}
+		else {
+			System.out.println("Não a proprietario cadastrado com esse cpf.");
+			Veiculo v = new Veiculo(cor, placa, descricao, quantidadePortas, pEncontrada.cpf);
+			return v;
+		}
+	
+	}
 
 		//ler.close();
 
-		return c;
-	}
 
 	// item 8 do menu
 	public static void mostrarVeiculo(Veiculo veiculoEncontrado) {
@@ -477,28 +496,46 @@ public class ClassePrincipal {
 	
 	// item 4 do menu
 	
-	public static ArrayList<Proprietario> listaPessoa() throws Exception {
-		ArrayList<Proprietario> vetorProprietarios = new ArrayList<Proprietario>();
-
-		conexao = ConexaoBD.getInstance();
-		String sql = "select * from proprietario";
+	public static ArrayList<Proprietario> listaProprietario() throws Exception {
+	    ArrayList<Proprietario> vetorProprietario = new ArrayList<Proprietario>();
+	    //Relatório de todos os proprietários de veículos, considerando o nome do proprietário em ordem afabética, a placa e a descrição do ou dos veículos os quais ele é proprietário"
+	    conexao = ConexaoBD.getInstance();
+		String sql = "select proprietario.*, veiculo.* from proprietario INNER JOIN veiculo ON veiculo.cpf = proprietario.cpf";
 		PreparedStatement stmt = conexao.prepareStatement(sql);
 		ResultSet resultado = stmt.executeQuery();
-
+		
+		
 		Proprietario p = null;
-
-		while (resultado.next()) {
-			p = new Proprietario(resultado.getString("nome"), resultado.getLong("cpf"));
-
-			vetorProprietarios.add(p);
-		}
-
+		Veiculo v = null;
+		while(resultado.next()) {
+			
+			p = new Proprietario(
+					resultado.getLong("cpf"),
+					resultado.getString("nome"), 
+					resultado.getString("email"), 
+					resultado.getString("sexo"), 
+					resultado.getDouble("peso"),
+					resultado.getLong("numeroCnh")
+					);
+			
+			v = new Veiculo(
+					resultado.getString("cor"), 
+					resultado.getString("placa"), 
+					resultado.getString("descricao"), 
+					resultado.getInt("quantidadePortas"), 
+					resultado.getLong("cpf")
+					);
+			
+			vetorProprietario.add(p);
+		}    
+		
 		resultado.close();
 		stmt.close();
-
-		return vetorProprietarios;
-	}
-
+			
+		return vetorProprietario;
+	 }
+	
+	
 	/******************* método de ordenação rápida ***********************/
 	public static ArrayList<Proprietario> quickSort(ArrayList<Proprietario> list) {
 
@@ -529,6 +566,29 @@ public class ClassePrincipal {
 		return listOrdenada;
 	}
 	
+	public static Proprietario buscarProprietarioPeloCpf(Long cpfBuscado) throws Exception {
+
+		conexao = ConexaoBD.getInstance();
+
+		String sql = "select * from proprietario where cpf like ?";
+
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+		stmt.setLong(1, cpfBuscado);
+		ResultSet resultado = stmt.executeQuery(); // importar a classe ResultSet para recuperar os dados que o select
+													// selecionou
+
+		Proprietario p = null;
+		if (resultado.next()) {
+			p = new Proprietario(resultado.getLong("cpf"), resultado.getString("nome"), resultado.getString("email"),
+					resultado.getString("sexo"), resultado.getDouble("peso"), resultado.getLong("numeroCnh"));
+
+		}
+		resultado.close();
+		stmt.close();
+
+		return p;
+	}
+	
 	// item 5 do menu
 
 	public static void lerDadosP(Proprietario pSeraAlterado, String buscarEmail) throws Exception {
@@ -555,7 +615,7 @@ public class ClassePrincipal {
 	public static void inserirVeiculo(Veiculo clida) throws SQLException {
 		conexao = ConexaoBD.getInstance();
 
-		String sql = "insert into veiculo (cor, placa, descricao, quantidadePortas) values (?,?,?,?)";
+		String sql = "insert into veiculo (cor, placa, descricao, quantidadePortas, cpf) values (?,?,?,?,?)";
 
 		PreparedStatement stmt = conexao.prepareStatement(sql);
 
@@ -563,6 +623,7 @@ public class ClassePrincipal {
 		stmt.setString(2, clida.getPlaca());
 		stmt.setString(3, clida.getDescricao());
 		stmt.setInt(4, clida.getQuantidadePortas());
+		stmt.setLong(5, clida.getCpf());
 
 		stmt.execute();
 
