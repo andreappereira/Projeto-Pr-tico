@@ -164,6 +164,26 @@ public class ClassePrincipal {
 				break;
 
 			}
+			
+			case 9: {// Relatório de todos os veículos de uma dada cor, com o nome do proprietário e a quantidade de portas
+				Scanner lerCor = new Scanner(System.in);
+				String cor;
+				
+				System.out.println("Digite a cor do veiculo que será buscado: ");
+				cor = lerCor.next();
+				ArrayList <Veiculo> vetVeiculos = relatorioDeVeiculosCompleto(cor); 
+				System.out.println("** RELATORIO COMPLETO DE VEICULOS **");
+				
+				for(int i=0; i<vetVeiculos.size(); i++) {
+					Veiculo v = vetVeiculos.get(i);
+					Proprietario p = buscarProprietarioPeloCpf(v.cpf);
+					mostrarVeiculo(v);
+					mostrarProprietario(p);
+				}
+				
+				break;
+			}
+			
 
 			case 10: { // Busca veículos pela cor
 				Scanner lerCor = new Scanner(System.in);
@@ -400,6 +420,54 @@ public class ClassePrincipal {
 		System.out.print("\nQuantidade de portas..: " + veiculoEncontrado.getQuantidadePortas());
 		System.out.println();
 
+	}
+	
+	// item 9 do menu
+	public static ArrayList <Veiculo> relatorioDeVeiculosCompleto(String cor) throws Exception {
+		ArrayList <Veiculo> vetVeiculos = new ArrayList<Veiculo>();
+		
+		conexao = ConexaoBD.getInstance();
+		
+		String sql = "SELECT veiculo.*, proprietario.* FROM veiculo INNER JOIN proprietario ON proprietario.cpf = veiculo.cpf WHERE cor LIKE ?";
+		
+		
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+		stmt.setString(1, cor);
+		
+		ResultSet resultado = stmt.executeQuery(); 
+		
+		Veiculo v = null;
+		Proprietario p = null;
+		while (resultado.next()) { 
+			
+			p = new Proprietario(
+				resultado.getLong("Proprietario.cpf"), 
+				resultado.getString("Proprietario.nome"), 
+				resultado.getString("Proprietario.email"),
+				resultado.getString("Proprietario.sexo"),
+				resultado.getDouble("Proprietario.peso"), 
+				resultado.getLong("Proprietario.numeroCnh")
+				);
+				
+				
+			v = new Veiculo( 
+					resultado.getString("Veiculo.cor"), 
+					resultado.getString("Veiculo.placa"), 
+					resultado.getString("Veiculo.descricao"), 
+					resultado.getInt("Veiculo.quantidadePortas"), 
+					resultado.getLong("Veiculo.cpf")
+			);
+			
+			//v.setEmail(p);
+			vetVeiculos.add(v); //adiciona a veiculo do proprietario buscada
+		}
+			
+		
+		
+		resultado.close();
+		stmt.close();
+				
+		return vetVeiculos;
 	}
 
 	// item 10 do menu
